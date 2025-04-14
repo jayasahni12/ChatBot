@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SUSTAINABLE BOT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            animation: fadeInBody 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInBody {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .chat-container {
+            width: 1400px;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(14px);
+            border-radius: 20px;
+            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .chat-header {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            padding: 20px;
+            color: #ffffff;
+            text-align: center;
+            font-size: 3em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
+        }
+
+        .input-box {
+            display: flex;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px 30px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .input-box input {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            border-radius: 2rem;
+            text-align: center;
+            border: 2px solid #ffffff50;
+            background-color: #ffffff10;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .input-box input::placeholder {
+            color: #cccccc;
+        }
+
+        .input-box input:focus {
+            border-color: #00c6ff;
+            background-color: #ffffff20;
+        }
+
+        .input-box button {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: white;
+            border: none;
+            margin-left: 15px;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 2rem;
+            transition: all 0.3s ease-in-out;
+            font-weight: bold;
+        }
+
+        .input-box button:hover {
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            transform: scale(1.05);
+        }
+
+        .user-message,
+        .bot-message {
+            margin-bottom: 10px;
+            padding: 36px 20px;
+            border-radius: 20px;
+            max-width: 70%;
+            word-wrap: break-word;
+            animation: fadeInMessage 0.5s ease-in-out;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeInMessage {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            background: linear-gradient(to right, #fc466b, #3f5efb);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background: linear-gradient(to right, #43cea2, #185a9d);
+            color: white;
+            align-self: flex-start;
+        }
+
+        .bot-message p {
+            margin-bottom: 10px;
+        }
+
+        .bot-message ul,
+        .bot-message ol {
+            margin-left: 20px;
+            margin-bottom: 10px;
+            padding-left: 0;
+        }
+
+        .bot-message li {
+            margin-bottom: 3px;
+            padding-left: 5px;
+        }
+
+        .bot-message h1,
+        .bot-message h2,
+        .bot-message h3,
+        .bot-message h4,
+        .bot-message h5,
+        .bot-message h6 {
+            margin: 12px 0 8px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .bot-message a {
+            color: #ffdd57;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .typing {
+            font-style: italic;
+            color: #eeeeee;
+            padding-left: 10px;
+        }
+
+        .credits {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            animation: fadeInCredits 2s ease-in-out;
+        }
+
+        @keyframes fadeInCredits {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="chat-container">
+    <div class="chat-header">
+        SUSTAINABLE PRODUCT FINDER
+    </div>
+    <div id="chatBox" class="chat-box"></div>
+    <div class="input-box">
+        <input
+                type="text"
+                id="userInput"
+                placeholder="Ask me anything..."
+                autocomplete="off"
+        />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<div class="credits">
+    Made by:- RACHIT KUMAR(12312837), JAYA SAHNI(12323644)
+</div>
+
+<script>
+    const chatBox = document.getElementById("chatBox");
+    const userInput = document.getElementById("userInput");
+
+    const GEMINI_API_KEY = "AIzaSyDS-xYBcmOrIDVCVVLI9zlZuwKm5CCvIoc";
+
+    let conversationHistory = [
+        {
+            role: "assistant",
+            parts: [{ text: "Hello! I'm your sustainable product assistant. How can I help you find eco-friendly products today?" }]
+        }
+    ];
+
+    function appendMessage(message, className) {
+        const messageElement = document.createElement("div");
+        messageElement.className = className;
+        messageElement.innerHTML = className === "bot-message" ? formatBotResponse(message) : message;
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function formatBotResponse(text) {
+        let formatted = text;
+
+        // Replace **bold** and *italic*
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        formatted = formatted.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+        // Convert Markdown-like headers to HTML headings
+        formatted = formatted.replace(/^###### (.*$)/gim, '<h6>$1</h6>');
+        formatted = formatted.replace(/^##### (.*$)/gim, '<h5>$1</h5>');
+        formatted = formatted.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+        formatted = formatted.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+        formatted = formatted.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+        formatted = formatted.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+
+        // Format unordered lists
+        formatted = formatted.replace(/^\s*[-*•] (.*)$/gim, '<li>$1</li>');
+        formatted = formatted.replace(/(<li>.*<\/li>)/gim, function (match) {
+            return /<ul>/.test(match) ? match : '<ul>' + match + '</ul>';
+        });
+
+        // Format numbered headings and bullet points
+        let headingNumber = 1;
+        formatted = formatted.replace(/^(\d+\.\s+)(.*)$/gim, (match, number, title) => {
+            const bulletPoints = [];
+            let tempFormatted = formatted.substring(formatted.indexOf(match) + match.length);
+            const bulletPointRegex = /^\s*[-*•] (.*)$/gim;
+            let bulletMatch;
+
+            while ((bulletMatch = bulletPointRegex.exec(tempFormatted)) !== null) {
+                bulletPoints.push(`<li>${bulletMatch[1]}</li>`);
+                tempFormatted = tempFormatted.substring(tempFormatted.indexOf(bulletMatch[0]) + bulletMatch[0].length);
+            }
+
+            if (bulletPoints.length > 0) {
+                formatted = formatted.replace(new RegExp(bulletPoints.map(point => point.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|'), 'g'), '');
+                return `<h3>${headingNumber++}. ${title}</h3><ul style="padding-left: 15px;">${bulletPoints.join('')}</ul>`;
+            } else {
+                return `<h3>${headingNumber++}. ${title}</h3>`;
+            }
+        });
+
+        formatted = formatted.replace(/<p><\/p>/g, '');
+        formatted = formatted.replace(/\n{2,}/g, '</p><p>');
+        formatted = formatted.replace(/\n/g, '<br>');
+        formatted = '<p>' + formatted + '</p>';
+        formatted = formatted.replace(/<p><\/p>/g, '');
+        
+        const urlRegex = /\[([^\]]+)\]\((https?:\/\/[^\s<]+)\)/g;
+        formatted = formatted.replace(urlRegex, (match, linkText, url) => {
+            return `<a href="${url}" target="_blank">${linkText}</a>`;
+        });
+        
+
+        return formatted;
+    }
+
+    async function callGeminiAPI(query) {
+        try {
+            conversationHistory.push({
+                role: "user",
+                parts: [{ text: query }]
+            });
+
+            const response = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: conversationHistory,
+                        generationConfig: {
+                            temperature: 0.7,
+                            topP: 0.8,
+                            topK: 40
+                        }
+                    })
+                }
+            );
+
+            const data = await response.json();
+            const botResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
+
+            conversationHistory.push({
+                role: "model",
+                parts: [{ text: botResponse }]
+            });
+
+            return botResponse;
+        } catch (error) {
+            console.error("Error calling Gemini API:", error);
+            throw error;
+        }
+    }
+
+    function sendMessage() {
+        const userMessage = userInput.value;
+        if (userMessage.trim() !== "") {
+            appendMessage(userMessage, "user-message");
+            userInput.value = "";
+
+            const typingIndicator = document.createElement("div");
+            typingIndicator.className = "typing";
+            typingIndicator.textContent = "Bot is typing...";
+            chatBox.appendChild(typingIndicator);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            callGeminiAPI(userMessage)
+                .then((botResponse) => {
+                    chatBox.removeChild(typingIndicator);
+                    appendMessage(botResponse, "bot-message");
+                })
+                .catch((error) => {
+                    chatBox.removeChild(typingIndicator);
+                    appendMessage("Sorry, something went wrong. " + error.message, "bot-message");
+                });
+        }
+    }
+
+    userInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    window.onload = function () {
+        setTimeout(() => {
+            appendMessage(conversationHistory[0].parts[0].text, "bot-message");
+        }, 500);
+    };
+</script>
+</body>
+</html>
